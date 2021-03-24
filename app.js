@@ -1,7 +1,7 @@
 // Run command in terminal: npm install -g json-server
 // Then run server with: json-server --watch db.json
 
-// 1.
+// 1. Setting a Fetch
 //First thing we can do is setup the fetch 
 //  1a. baseURL is a good const to set db url to
 //  1b. after constant is created, add the fetch process:
@@ -21,15 +21,14 @@
 //              in this example, li items need to be appended to ul, since they don't exist
 //                  already 
 
-// 2.
+// 2. Creating the variables 
 //At some point early on i will need to create variables that will 
 //  grab the elements i'm going to want to modify with db info
 //      querySelector() is a good method to use to grab HTML element
 //      either assign ID to HTML element or use class (in html.index)
 //        
 
-//3. 
-//Adding likes to like counter 
+//3. Adding likes to like counter 
 //  3a We will need to add an eventLlistener to the like button to rack up likes when user clicks
 //      remember that eventListener takes two arguments:
 //          ("event to listen for", (event) => {} )
@@ -41,7 +40,7 @@
 //          and then set the textContent to that new variable. This keeps the count stable 
 //          We can then use that variable in the body of our PATCH request 
 
-//4. using PATCH 
+//4. Using PATCH 
 //PATCH allows us to modify db so the changes we make at endpoint persist 
 //  4a the syntax requires:
 //      creating the fetch line 
@@ -50,6 +49,19 @@
 //      body - where data gets stringify-ed and we point to where 
 //          we are trying to update in db
 //  be sure to use commas to separate things 
+
+//5. Persisting new comments on the comment form 
+//  5a First we want to tie the form element to a new variable we can use (2)
+//  5b Then, we will add an event listener in the pile of fetch functions, outside of the PATCH     
+//      Remember that the eventListener action takes 2 arguments! 2nd arg will be the function/action
+//      Also remember to add a preventDefault action to stop form from refreshing page 
+//  5c use formData action:
+//      setup variable to hold the form data
+//      use "new FormData" class/object to pass in event target info 
+//          this can be a good place to drop a console log to see the form data that gets passed 
+//              (use newly created variable in console log to see what's grabbed)
+//      
+//  
 
 // 1.
 const baseURL = "http://localhost:3000/movies/3"
@@ -61,7 +73,7 @@ const movieImage = document.querySelector("#movie-image")
 const movieLikes = document.querySelector("#like-count")
 const movieReviews = document.querySelector(".reviews")
 const likeButton = document.querySelector("#like-button")
-
+const commentForm = document.querySelector("#new-review")
 
 // 1. 
 fetch (baseURL)  //1b
@@ -93,6 +105,14 @@ fetch (baseURL)  //1b
                 })
             })
         })
+        //5.
+        commentForm.addEventListener('submit', (event) => {
+            event.preventDefault()
+            const formData = new FormData(event.target)  
+            const content = formData.get('content')
+           
+        })
+
     })
 
 
