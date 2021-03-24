@@ -1,3 +1,6 @@
+// Run command in terminal: npm install -g json-server
+// Then run server with: json-server --watch db.json
+
 // 1.
 //First thing we can do is setup the fetch 
 //  1a. baseURL is a good const to set db url to
@@ -32,8 +35,21 @@
 //          ("event to listen for", (event) => {} )
 //  3b In order to up the count, we can add an incrementor (++) via .textContent
 //          to the element that holds the likes
-//      Another method we can use is parseInt(), wrapping it around the textContent ar
+//      Another (preferred) method we can use is parseInt(), wrapping it around the textContent
 //          which will turn it into integer, then add a +1   
+//        If we use parseInt, be sure to set the formula to a new variable (use LET, as variable value will change),
+//          and then set the textContent to that new variable. This keeps the count stable 
+//          We can then use that variable in the body of our PATCH request 
+
+//4. using PATCH 
+//PATCH allows us to modify db so the changes we make at endpoint persist 
+//  4a the syntax requires:
+//      creating the fetch line 
+//      a method ("PATCH")  
+//      headers wrapped in curly bois
+//      body - where data gets stringify-ed and we point to where 
+//          we are trying to update in db
+//  be sure to use commas to separate things 
 
 // 1.
 const baseURL = "http://localhost:3000/movies/3"
@@ -62,8 +78,20 @@ fetch (baseURL)  //1b
         
         //3.
         likeButton.addEventListener("click", (event) => { //3a
-            movieLikes.textContent = parseInt(movieLikes.textContent) + 1
-            console.log("clicked")
+            let newLikeCount = parseInt(movieLikes.textContent) + 1 //3b
+            
+            movieLikes.textContent = newLikeCount
+                        
+            //4.
+            fetch(baseURL, {
+                method: "PATCH", //4a
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    likes: newLikeCount
+                })
+            })
         })
     })
 
